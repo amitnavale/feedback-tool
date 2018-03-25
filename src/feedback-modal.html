@@ -28,6 +28,10 @@
                 <paper-button id="btnSave" on-tap="OnSaveClose"> Save & Close </paper-button>
             </div>
         </paper-dialog>
+        <paper-dialog id="dialogComplete">
+            <div>MESSAGE FOR DEMO ONLY</div>
+            <div>Your response is saved. Thanks.</div>
+        </paper-dialog>
     </template>
 
     <script>
@@ -87,6 +91,7 @@
 
             close() {
                 this.$.feedbackModal.close();
+                this.$.dialogComplete.open();
             }
             
             save() {

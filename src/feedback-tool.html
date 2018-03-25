@@ -11,6 +11,10 @@
     </style>
     <app-localstorage-tidy-string id="localStorage" key="feedbackdate" data="{{feedbackdate}}"></app-localstorage-tidy-string>
     <feedback-modal id="modal"></feedback-modal>
+    <paper-dialog id="dialogComplete">
+      <div>MESSAGE FOR DEMO ONLY</div>
+      <div> Your feedback is already collected, Thanks.</div>
+    </paper-dialog>
   </template>
 
   <script>
@@ -53,7 +57,10 @@
       _popFeedbackChanged(popFeedback) {
         if (popFeedback) {
           this.$.modal.open();
+        } else {
+          this.$.dialogComplete.open();
         }
+
 
       }
 
