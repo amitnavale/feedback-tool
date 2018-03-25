@@ -1,23 +1,112 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/l2t-paper-rating/l2t-paper-rating.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
 
 <dom-module id="feedback-modal">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-  </template>
+    <template>
+        <style>
+            .color {
+                --rating-icon-color: #ffb300;
+                --rating-ink-color: #ffb300;
+            }
+        </style>
 
-  <script>
-    class FeedbackModal extends Polymer.Element {
-      static get is() { return 'feedback-modal'; }
-      static get properties() {
-        return {
-        };
-      }
-    }
+        <paper-dialog id="feedbackModal">
+            <div class="header-panel"> 
+                <h2>Thank you for using this service. We would appreciate your feedback by answering this question.</h2>
+            </div>
+            <div class="content-panel">
+                <h3> How likely would you be to recommend this service to others?</h3>
+                <l2t-paper-rating rating="{{userRatings}}" icon="thumb-up" total="10" class="color"></l2t-paper-rating>
+                <paper-input id="inputQuestion" label$=[[selectedQuestion]]></paper-input>
+            </div>
+            <div class="button-panel">
+                <paper-button id="btnCancel" on-tap="onCancelTap"> Cancel </paper-button>
+                <paper-button id="btnSave" on-tap="OnSaveClose"> Save & Close </paper-button>
+            </div>
+        </paper-dialog>
+    </template>
 
-    window.customElements.define(FeedbackModal.is, FeedbackModall);
-  </script>
+    <script>
+        class FeedbackModal extends Polymer.Element {
+            static get is() { return 'feedback-modal'; }
+            static get properties() {
+                return {
+                    userRatings: {
+                        type: Number,
+                        value: 0,
+                        notify: true
+                    },
+                    questions: {
+                        type: Array,
+                        value: ['What can we do to  improve?', 'Is there anything we can do to improve?', 'Is there anything you particularly like?'],
+                    },
+                    selectedQuestionIndex: {
+                        type: Number,
+                        value: -1
+                    },
+                    selectedQuestion: {
+                        type: String,
+                        computed: '_computedEligibleQuestion(selectedQuestionIndex)'
+                    }
+                };
+            }
+            static get observers() {
+                return [
+                    '_setQuestion(userRatings)'
+                ]
+            }
+
+            ready() {
+                super.ready();
+            }
+
+            _setQuestion(userRatings) {
+                if (userRatings > -1) {
+                    if (userRatings > 8) {
+                        this.selectedQuestionIndex = 2;
+                    } else if (userRatings > 4) {
+                        this.selectedQuestionIndex = 1;
+                    } else if (userRatings > 0) {
+                        this.selectedQuestionIndex = 0;
+                    }
+                }
+            }
+
+            _computedEligibleQuestion(selectedQuestionIndex) {
+                this.$.inputQuestion.value = '';
+                return selectedQuestionIndex > -1 ? this.questions[selectedQuestionIndex] : '';
+            }
+
+            open() {
+                this.$.feedbackModal.open();
+            }
+
+            close() {
+                this.$.feedbackModal.close();
+            }
+            
+            save() {
+                var userResponse={
+                    ratings: this.userRatings,
+                    description: this.$.inputQuestion.value,
+                    feedbackDate:Date.now()
+                }
+                this.dispatchEvent(new CustomEvent('update-feedback', {detail: userResponse}));
+            }
+            onCancelTap() {
+                this.close();
+            }
+
+            OnSaveClose(){
+                this.save();
+                this.close();
+            }
+        }
+
+        window.customElements.define(FeedbackModal.is, FeedbackModal);
+    </script>
 </dom-module>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>feedback-modal test</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../feedback-modal.html">
+  </head>
+  <body>
+
+    <test-fixture id="BasicTestFixture">
+      <template>
+        <feedback-modal></feedback-modal>
+      </template>
+    </test-fixture>
+
+    
+    <script>
+      suite('feedback-modal', () => {
+
+        //Check structure
+        test('instantiating the element with default properties works', () => {
+          const element = fixture('BasicTestFixture');
+          const elementShadowRoot = element.shadowRoot;
+          const elementPaperDialog = elementShadowRoot.querySelector('paper-dialog');
+          expect(elementPaperDialog).to.not.be.null;
+        });
+
+        test('on rating 9 "what like" question asked', () => {
+          const element = fixture('BasicTestFixture');
+          element.userRatings = 9;
+          expect(element.selectedQuestionIndex === 2).to.be.true;
+        });
+
+        test('on rating 5 and 8  "what else to improve "question asked', () => {
+          const element = fixture('BasicTestFixture');
+          element.userRatings = 8;
+          expect(element.selectedQuestionIndex === 1).to.be.true;
+          element.userRatings = 5;
+          expect(element.selectedQuestionIndex === 1).to.be.true;
+        });
+
+        test('on rating 1,4 "what can be done " question asked', () => {
+          const element = fixture('BasicTestFixture');
+          element.userRatings = 4;
+          expect(element.selectedQuestionIndex === 0).to.be.true;
+          element.userRatings = 1;
+          expect(element.selectedQuestionIndex === 0).to.be.true;
+        });
+
+      });
+    </script>
+
+  </body>
+</html>

@@ -1,6 +1,6 @@
 # \<feedback-tool\>
 
-a feedback tool using polumer 2.0 and redux
+a feedback tool using polymer 2.0 
 
 ## Install the Polymer-CLI
 
