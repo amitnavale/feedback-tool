@@ -1,0 +1,12 @@
+{
+  "name": "Feedback tool",
+  "short_name": "Feedback tool",
+  "description": "Feedback tool description",
+  "icons": [
+    
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#3f51b5",
+  "background_color": "#3f51b5"
+}
