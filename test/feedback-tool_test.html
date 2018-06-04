@@ -9,7 +9,7 @@
     <script src="../bower_components/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../feedback-tool.html">
+    <link rel="import" href="../src/feedback-tool.html">
   </head>
   <body>
 
@@ -19,32 +19,15 @@
       </template>
     </test-fixture>
 
-    <test-fixture id="ChangedPropertyTestFixture">
-      <template>
-        <feedback-tool prop1="new-prop1"></feedback-tool>
-      </template>
-    </test-fixture>
-
     <script>
       suite('feedback-tool', () => {
-
-        test('instantiating the element with default properties works', () => {
+        test('contains feedback modal element', () => {
           const element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'feedback-tool');
           const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello feedback-tool!');
+          const elementPaperDialog = elementShadowRoot.querySelector('feedback-modal');
+          expect(elementPaperDialog).to.not.be.null;
         });
-
-        test('setting a property on the element works', () => {
-          // Create a test fixture
-          const element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
-          const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
-        });
-
+        //TODO: Add test suite to check 180 days and popup modal
       });
     </script>
 

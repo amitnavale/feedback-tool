@@ -1,0 +1,75 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="feedback-modal.html">
+<link rel="import" href="../bower_components/app-localstorage-tidy-string/app-localstorage-tidy-string.html">
+<script src="../bower_components/moment/moment.js"></script>
+<dom-module id="feedback-tool">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+    </style>
+    <app-localstorage-tidy-string id="localStorage" key="feedbackdate" data="{{feedbackdate}}"></app-localstorage-tidy-string>
+    <feedback-modal id="modal"></feedback-modal>
+    <paper-dialog id="dialogComplete">
+      <div>MESSAGE FOR DEMO ONLY</div>
+      <div> Your feedback is already collected, Thanks.</div>
+    </paper-dialog>
+  </template>
+
+  <script>
+    class FeedbackTool extends Polymer.Element {
+      static get is() { return 'feedback-tool'; }
+      static get properties() {
+        return {
+          popFeedback: {
+            type: Boolean
+          },
+          feedbackInfo: {
+            type: Object
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_popFeedbackChanged(popFeedback)'
+        ]
+      }
+
+      ready() {
+        super.ready();
+        this.$.modal.addEventListener('update-feedback', this._onUpdateFeedback.bind(this));
+        this.popFeedback = this.isfeebackNotInRange();
+      }
+
+      isfeebackNotInRange() {
+        if (!this.feedbackdate) {
+          return true;
+        }
+
+        var dateBefore180days = moment(Date.now()).add(-180, 'days');
+        var feedbackDate = moment(parseInt(this.feedbackdate));
+        //If todays date is before 180 days from feedback,
+        //then feedback is not in range 
+        return feedbackDate.isBefore(dateBefore180days);
+      }
+      _popFeedbackChanged(popFeedback) {
+        if (popFeedback) {
+          this.$.modal.open();
+        } else {
+          this.$.dialogComplete.open();
+        }
+
+
+      }
+
+      _onUpdateFeedback(event) {
+        this.set('feedbackdate', event.detail.feedbackDate);
+      }
+
+    }
+
+    window.customElements.define(FeedbackTool.is, FeedbackTool);
+  </script>
+</dom-module>
